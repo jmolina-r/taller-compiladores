@@ -12,11 +12,8 @@
 # -identificador (ID)
 # -números (NUM)
 # -----------------------------------------------------------------------------
-import ply.lex as lex
-import os
-import codecs
 from os import scandir, getcwd
-import sys
+import ply.lex as lex
 
 # lista de los nombres de los tokens
 tokens = (
@@ -64,8 +61,8 @@ t_TIMES = r'\*'
 t_DIVIDE = r'/'
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
-t_LBRACE = r'\{'
-t_RBRACE = r'\}'
+t_LBRACE = r'{'
+t_RBRACE = r'}'
 t_LSQUAREBRACKET = r'\['
 t_RSQUAREBRACKET = r'\]'
 t_LESS = r'<'
@@ -74,19 +71,19 @@ t_MUCHSMALLER = r'\<<'
 t_MUCHGREATER = r'\>>'
 t_EQUAL = r'\=='
 t_INEGUAL = r'\<>'
-t_COMMA = r'\,'
-t_SEMICOLON = r'\;'
+t_COMMA = r','
+t_SEMICOLON = r';'
 t_ASSIGN = r'='
 
 t_MULTCOMMMENT = r'<\/(\s*|.*?)*\/>'
-t_LINECOMMENT = r'((\?|!).*)'
+t_LINECOMMENT = r'(\?|!).*'
 
 # Regla que contiene caracteres ignorados (espacios y tabs)
 t_ignore = ' [\t\'\n]*'
 
 
 def t_ID(t):
-    r'[A-Za-z]((_?[a-zA-Z]+)*_?([a-z0-9])+)?'
+    r'([A-Za-z](_?[a-zA-Z]+)*_?([a-z0-9])+|[a-z])'
     # El método get () devuelve un valor para la key dada. Si la key no está disponible en el diccionario,
     # entonces devuelve el valor predeterminado 'ID'.
     t.type = reserved.get(t.value.lower(), 'ID')
@@ -112,11 +109,12 @@ def listarArchivos(ruta=getcwd() + '\\file'):
 def lecturaArchivo(rutaArch):
     archivo = open(rutaArch,'r')
     lineas = archivo.read()
+    archivo.close()
     print('-----------------CÓDIGO----------------------')
     print(lineas)
     print('---------------------------------------------\n')
     print('Análisis Léxico')
-    return str(lineas)
+    return lineas
 
 
 def getcodigo():

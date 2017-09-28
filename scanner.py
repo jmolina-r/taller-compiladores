@@ -67,8 +67,8 @@ t_LSQUAREBRACKET = r'\['
 t_RSQUAREBRACKET = r'\]'
 t_LESS = r'<'
 t_GREATER = r'\>'
-t_MUCHSMALLER = r'\<<'
-t_MUCHGREATER = r'\>>'
+t_MUCHSMALLER = r'\<='
+t_MUCHGREATER = r'\>='
 t_EQUAL = r'\=='
 t_INEGUAL = r'\<>'
 t_COMMA = r','
@@ -84,16 +84,19 @@ t_ignore = ' [\t\'\n]*'
 
 def t_ID(t):
     r'([A-Za-z](_?[a-zA-Z]+)*_?([a-z0-9])+|[a-z])'
-    # El método get () devuelve un valor para la key dada. Si la key no está disponible en el diccionario,
+    # El método get () devuelve el 'valor' para la 'key' dada. Si la key no está disponible en el diccionario,
     # entonces devuelve el valor predeterminado 'ID'.
     t.type = reserved.get(t.value.lower(), 'ID')
     return t
 
 
 # Regla de manejo de errores
+list_error = []
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
+    list_error.append(str(t.value[0])) #agrega el valor del error a una lista
     t.lexer.skip(1)
+
 
 
 def t_NUM(t):
@@ -118,7 +121,7 @@ def lecturaArchivo(rutaArch):
 
 
 def getcodigo():
-    #mostrar listado de archivos
+    print(getcwd())
     print('-------------------------------------------')
     print('        TALLER COMPILADORES: SCANNER')
     print('-------------------------------------------')
@@ -126,7 +129,7 @@ def getcodigo():
 
     list_Arch=listarArchivos()
     if len(list_Arch)==0:
-        print('No se encuetran archivos de prueba :(')
+        print('No se encuentran archivos de prueba :(')
     else:
         #imprimir lista de archivos disponibles en la carpeta 'file'
         for arch in list_Arch:
@@ -143,6 +146,8 @@ def getcodigo():
         codigofuente=lecturaArchivo(rutaArch)
 
     return (codigofuente)
+
+
 codigofuente = getcodigo()
 
 # Construir el lexer
@@ -151,10 +156,22 @@ lexer = lex.lex()
 # Dar al analizador léxico algún input
 lexer.input(codigofuente)
 
+#archivo salida: 'tokens.txt'
+arch_salida = open('tokens.txt','w')
+arch_salida.write('Token'+'  '+ 'Valor \n')
 # Tokenize
 while True:
     tok = lexer.token()
     if not tok:
         break  # no hay mas input
     print(tok)
+    #escritura en el archivo de salida
+    arch_salida.write(str(tok.type)+"  "+ str(tok.value) + '\n')
 
+
+arch_salida.write('Caracteres Ilegales: \n')
+
+for error in list_error:
+    arch_salida.write(error+'\n')
+
+arch_salida.close()

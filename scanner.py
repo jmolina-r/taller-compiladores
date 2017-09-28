@@ -78,12 +78,13 @@ t_ASSIGN = r'='
 t_MULTCOMMMENT = r'<\/(\s*|.*?)*\/>'
 t_LINECOMMENT = r'(\?|!).*'
 
+
 # Regla que contiene caracteres ignorados (espacios y tabs)
 t_ignore = ' [\t\'\n]*'
 
 
 def t_ID(t):
-    r'([A-Za-z](_?[a-zA-Z]+)*_?([a-z0-9])+|[a-z])'
+    r'([A-Za-z](_?[a-zA-Z0-9]+)*_?([a-z0-9])+|[a-z])|(?i)else|(?i)if|(?i)int|(?i)void|(?i)return|(?i)while'
     # El método get () devuelve el 'valor' para la 'key' dada. Si la key no está disponible en el diccionario,
     # entonces devuelve el valor predeterminado 'ID'.
     t.type = reserved.get(t.value.lower(), 'ID')
